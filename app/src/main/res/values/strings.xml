@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Stress Relief</string>
+    
+    <!-- Authentication -->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="password_hint">Enter your password</string>
+    
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="ai_prediction">AI Prediction</string>
+    <string name="subscription">Subscription</string>
+    
+    <!-- Dashboard -->
+    <string name="stress_analytics">Stress Analytics</string>
+    <string name="sessions_completed">Sessions Completed</string>
+    <string name="average_stress_reduction">Average Stress Reduction</string>
+    
+    <!-- AI Prediction -->
+    <string name="predict_stress">Predict Stress Level</string>
+    <string name="premium_feature">Premium Feature</string>
+    <string name="upgrade_to_access">Upgrade to access AI prediction</string>
+    
+    <!-- Subscription -->
+    <string name="premium_subscription">Premium Subscription</string>
+    <string name="unlock_premium">Unlock Premium Features</string>
+    <string name="subscribe">Subscribe</string>
+</resources>
