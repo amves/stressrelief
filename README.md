@@ -186,7 +186,8 @@ This automatically:
 
 Want to automate uploads to Google Play? The workflow supports it!
 
-📖 **Google Play Setup Guide**: See [GOOGLE_PLAY_PUBLISHING.md](GOOGLE_PLAY_PUBLISHING.md)
+📖 **Quick Start**: See [PLAY_STORE_QUICKSTART.md](PLAY_STORE_QUICKSTART.md)  
+📖 **Full Setup Guide**: See [GOOGLE_PLAY_PUBLISHING.md](GOOGLE_PLAY_PUBLISHING.md)
 
 Once configured with required secrets, releases automatically upload to Google Play Console (Internal Track).
 
