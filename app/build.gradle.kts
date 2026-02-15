@@ -89,9 +89,6 @@ play {
     
     // Automatically publish releases (if false, creates a draft)
     defaultToAppBundles.set(false)
-    
-    // Retain old artifacts during upload
-    retain.artifacts.set(listOf())
 }
 
 dependencies {
