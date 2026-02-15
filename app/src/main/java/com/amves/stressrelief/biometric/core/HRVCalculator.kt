@@ -30,10 +30,10 @@ object HRVCalculator {
      * Calculate SDNN (Standard Deviation of NN intervals).
      * 
      * @param rr List of R-R intervals in milliseconds
-     * @return SDNN value, or 0.0 if no data
+     * @return SDNN value, or 0.0 if insufficient data
      */
     fun calculateSDNN(rr: List<Double>): Double {
-        if (rr.isEmpty()) return 0.0
+        if (rr.size < 2) return 0.0
         val mean = rr.average()
         return sqrt(rr.map { (it - mean) * (it - mean) }.average())
     }

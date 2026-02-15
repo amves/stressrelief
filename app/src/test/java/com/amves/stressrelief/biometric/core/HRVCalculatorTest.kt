@@ -110,7 +110,7 @@ class HRVCalculatorTest {
     fun `calculatePNN50 uses absolute value of differences`() {
         val rr = listOf(900.0, 800.0, 750.0, 850.0)
         // Differences: |-100|, |-50|, |100| = 100, 50, 100
-        // Count > 50: 2 out of 3 = 66.67%
+        // Count > 50: 2 (the 100s only, 50 equals threshold) out of 3 = 66.67%
         val expected = (2.0 / 3.0) * 100.0
         val result = HRVCalculator.calculatePNN50(rr)
         assertEquals(expected, result, 0.0001)
