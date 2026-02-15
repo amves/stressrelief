@@ -1,6 +1,8 @@
 # Stress Relief Android App
 
-A stress relief application built with Android Jetpack Compose featuring user authentication, analytics dashboard, AI prediction, and subscription management.
+![Android Build](https://github.com/amves/stressrelief/workflows/Android%20Build/badge.svg)
+
+A stress relief application built with Android Jetpack Compose featuring user authentication, analytics dashboard, AI prediction, subscription management, and health monitoring with HRV calculations.
 
 ## Features
 
@@ -9,6 +11,7 @@ A stress relief application built with Android Jetpack Compose featuring user au
 - **Dashboard Analytics**: Session tracking with Room database showing stress reduction metrics
 - **AI Prediction**: Mock stress level prediction (premium feature placeholder)
 - **Subscription/Paywall**: Basic premium subscription UI
+- **Health Monitoring**: HRV calculation with Health Connect and Wear OS integration
 - **Modern UI**: Built with Jetpack Compose and Material Design 3
 
 ## Architecture
@@ -89,6 +92,21 @@ app/src/main/java/com/amves/stressrelief/
 
 ## Setup
 
+### Option 1: Build APK with GitHub Actions (No Android Studio Required! ⭐)
+
+**Don't want to install Android Studio?** GitHub Actions builds APKs for you in the cloud!
+
+1. **Push your code to GitHub**
+2. **Go to Actions tab** on GitHub
+3. **Download APK** from the latest workflow run
+4. **Install on your phone**
+
+📖 **Detailed Guide**: See [GITHUB_ACTIONS_APK_BUILD.md](GITHUB_ACTIONS_APK_BUILD.md)
+
+**Quick Link**: [View Latest Builds](https://github.com/amves/stressrelief/actions/workflows/build.yml)
+
+### Option 2: Build Locally with Android Studio
+
 1. **Prerequisites**:
    - Android Studio Arctic Fox or later
    - JDK 17
@@ -100,12 +118,15 @@ app/src/main/java/com/amves/stressrelief/
 
 3. **Build**:
    ```bash
-   ./gradlew build
+   ./gradlew assembleDebug
    ```
+   APK location: `app/build/outputs/apk/debug/app-debug.apk`
 
 4. **Run**:
    - Open project in Android Studio
    - Run on emulator or device (API 26+)
+
+📖 **Local Build Guide**: See [BUILD_APK_GUIDE.md](BUILD_APK_GUIDE.md)
 
 ## Dependencies
 
@@ -114,9 +135,23 @@ app/src/main/java/com/amves/stressrelief/
 - Room 2.6.1
 - Hilt 2.48
 - Navigation Compose 2.7.5
+- Health Connect 1.1.0-alpha07
+- Wear OS Play Services 18.1.0
+
+## Health & Wellness Features
+
+This app includes comprehensive health monitoring capabilities:
+
+- **HRV Calculator**: Calculate RMSSD, SDNN, and PNN50 metrics
+- **Health Connect Integration**: Read heart rate and HRV data
+- **Wear OS Support**: Real-time heart rate monitoring from smartwatch
+- **Health Monitor UI**: View real-time health metrics and history
+
+📖 **Health Integration Guide**: See [WEAR_OS_HEALTH_CONNECT.md](WEAR_OS_HEALTH_CONNECT.md)
 
 ## Notes
 
 - The app includes a placeholder `google-services.json` for Firebase. Replace it with your actual Firebase configuration.
 - AI prediction is currently a mock implementation returning random values
 - Subscription functionality is a UI placeholder without actual payment integration
+- HRV calculations estimate RR intervals from heart rate; for medical-grade accuracy, use direct RR interval sensors
