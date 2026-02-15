@@ -94,6 +94,7 @@ jobs:
           echo "${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}" > app/play-store-credentials.json
       
       - name: Publish to Google Play Store (Internal Track)
+        id: play_store_publish
         if: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' && secrets.KEYSTORE_BASE64 != '' }}
         run: ./gradlew publishReleaseApk --no-daemon --stacktrace
         continue-on-error: true
@@ -101,9 +102,27 @@ jobs:
       - name: Rename APK files
         run: |
           cd app/build/outputs/apk/release
-          mv app-release*.apk stressrelief-${{ steps.version.outputs.version }}-release.apk 2>/dev/null || echo "APK already renamed or not found"
+          # Find the release APK (could be signed or unsigned)
+          if [ -f app-release.apk ]; then
+            mv app-release.apk stressrelief-${{ steps.version.outputs.version }}-release.apk
+          elif [ -f app-release-unsigned.apk ]; then
+            mv app-release-unsigned.apk stressrelief-${{ steps.version.outputs.version }}-release.apk
+          else
+            echo "Warning: Release APK not found"
+            ls -la
+          fi
           cd ../debug
           mv app-debug.apk stressrelief-${{ steps.version.outputs.version }}-debug.apk
+      
+      - name: Check Play Store Publishing Status
+        if: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' && secrets.KEYSTORE_BASE64 != '' }}
+        run: |
+          if [ "${{ steps.play_store_publish.outcome }}" == "failure" ]; then
+            echo "⚠️ Warning: Play Store publishing failed. Check logs above for details."
+            echo "The release will still be created on GitHub."
+          else
+            echo "✅ Successfully published to Play Store Internal Track"
+          fi
       
       - name: Generate changelog
         id: changelog
@@ -168,11 +187,21 @@ jobs:
           echo "### Download" >> $GITHUB_STEP_SUMMARY
           echo "Go to [Releases](https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}) to download" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Google Play Store" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}" ] && [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
-            echo "### Google Play Store" >> $GITHUB_STEP_SUMMARY
-            echo "✅ APK uploaded to Google Play Console (Internal Track)" >> $GITHUB_STEP_SUMMARY
-            echo "Visit [Google Play Console](https://play.google.com/console) to promote to other tracks" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.play_store_publish.outcome }}" == "success" ]; then
+              echo "✅ Successfully published to Internal Track" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Visit [Google Play Console](https://play.google.com/console) to promote to other tracks" >> $GITHUB_STEP_SUMMARY
+            elif [ "${{ steps.play_store_publish.outcome }}" == "failure" ]; then
+              echo "⚠️ Publishing failed - check logs for details" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Release was still created on GitHub. You can manually upload the APK to Play Console." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "ℹ️ Publishing was skipped or cancelled" >> $GITHUB_STEP_SUMMARY
+            fi
           else
-            echo "### Google Play Store" >> $GITHUB_STEP_SUMMARY
-            echo "⚠️ Not configured - Add PLAY_STORE_SERVICE_ACCOUNT_JSON and KEYSTORE_BASE64 secrets to enable" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ Not configured - Add PLAY_STORE_SERVICE_ACCOUNT_JSON and KEYSTORE_BASE64 secrets to enable" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "See [GOOGLE_PLAY_PUBLISHING.md](https://github.com/${{ github.repository }}/blob/main/GOOGLE_PLAY_PUBLISHING.md) for setup instructions" >> $GITHUB_STEP_SUMMARY
           fi
