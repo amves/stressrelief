@@ -1,8 +1,15 @@
 # Stress Relief Android App
 
 ![Android Build](https://github.com/amves/stressrelief/workflows/Android%20Build/badge.svg)
+[![Latest Release](https://img.shields.io/github/v/release/amves/stressrelief)](https://github.com/amves/stressrelief/releases/latest)
 
 A stress relief application built with Android Jetpack Compose featuring user authentication, analytics dashboard, AI prediction, subscription management, and health monitoring with HRV calculations.
+
+## 📥 Download
+
+**Latest Release**: [Download APK](https://github.com/amves/stressrelief/releases/latest)
+
+Official releases are published automatically when git tags are created. Download the latest version from the releases page.
 
 ## Features
 
@@ -92,7 +99,15 @@ app/src/main/java/com/amves/stressrelief/
 
 ## Setup
 
-### Option 1: Build APK with GitHub Actions (No Android Studio Required! ⭐)
+### Option 1: Download Pre-built Release (Easiest! 🎉)
+
+**Just want to use the app?** Download the latest release:
+
+1. **Go to Releases**: https://github.com/amves/stressrelief/releases/latest
+2. **Download APK**: Click on `stressrelief-X.X.X-release.apk`
+3. **Install on phone**: Transfer and install
+
+### Option 2: Build APK with GitHub Actions (No Android Studio Required! ⭐)
 
 **Don't want to install Android Studio?** GitHub Actions builds APKs for you in the cloud!
 
@@ -105,7 +120,7 @@ app/src/main/java/com/amves/stressrelief/
 
 **Quick Link**: [View Latest Builds](https://github.com/amves/stressrelief/actions/workflows/build.yml)
 
-### Option 2: Build Locally with Android Studio
+### Option 3: Build Locally with Android Studio
 
 1. **Prerequisites**:
    - Android Studio Arctic Fox or later
@@ -148,6 +163,23 @@ This app includes comprehensive health monitoring capabilities:
 - **Health Monitor UI**: View real-time health metrics and history
 
 📖 **Health Integration Guide**: See [WEAR_OS_HEALTH_CONNECT.md](WEAR_OS_HEALTH_CONNECT.md)
+
+## 🚀 Creating Releases
+
+**For Maintainers**: To publish an official release:
+
+```bash
+# Create and push a version tag
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+This automatically:
+- Builds release APK
+- Generates changelog
+- Publishes to GitHub Releases
+
+📖 **Full Release Guide**: See [RELEASE_PROCESS.md](RELEASE_PROCESS.md)
 
 ## Notes
 
