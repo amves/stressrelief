@@ -83,6 +83,17 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     
+    // Health Connect
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha07")
+    
+    // Wear OS
+    implementation("com.google.android.gms:play-services-wearable:18.1.0")
+    implementation("androidx.wear:wear:1.3.0")
+    
+    // Coroutines for async operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
