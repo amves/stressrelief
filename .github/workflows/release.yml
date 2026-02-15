@@ -95,7 +95,7 @@ jobs:
       
       - name: Publish to Google Play Store (Internal Track)
         if: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' && secrets.KEYSTORE_BASE64 != '' }}
-        run: ./gradlew publishReleaseBundle --no-daemon --stacktrace
+        run: ./gradlew publishReleaseApk --no-daemon --stacktrace
         continue-on-error: true
       
       - name: Rename APK files
