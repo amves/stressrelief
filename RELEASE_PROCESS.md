@@ -17,8 +17,11 @@ This document describes how to create official releases of the StressRelief app 
    - Generates changelog
    - Creates GitHub Release
    - Uploads APKs to release
+   - Uploads to Google Play Store (if configured)
    ↓
 4. Release is published and available for download
+   ↓
+5. Promote in Google Play Console (if uploaded)
 ```
 
 ## 📋 How to Create a Release
@@ -97,7 +100,7 @@ For each release, the following are created:
 
 ### APK Files
 1. **stressrelief-{VERSION}-release.apk**
-   - Release build (unsigned)
+   - Release build (signed if keystore configured)
    - Optimized for production
    - Smaller file size
 
@@ -105,6 +108,13 @@ For each release, the following are created:
    - Debug build
    - Includes debug symbols
    - Easier to troubleshoot
+
+### Google Play Store (If Configured)
+- **Track**: Internal testing track
+- **Status**: Released (ready for promotion)
+- **Promotion**: Manually promote to alpha/beta/production
+
+📖 **Setup Guide**: See [GOOGLE_PLAY_PUBLISHING.md](GOOGLE_PLAY_PUBLISHING.md) for configuration details.
 
 ## 🏷️ Version Numbering
 
@@ -340,6 +350,45 @@ See [Android documentation](https://developer.android.com/studio/publish/app-sig
 - [Git Tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 - [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github)
 - [Android App Signing](https://developer.android.com/studio/publish/app-signing)
+- [Google Play Publishing Setup](GOOGLE_PLAY_PUBLISHING.md)
+
+## 🏪 Publishing to Google Play Store
+
+Want to automatically upload releases to Google Play Store?
+
+### Quick Overview
+
+When configured, the release workflow automatically:
+1. ✅ Builds a signed APK
+2. ✅ Uploads to Google Play Console (Internal Track)
+3. ✅ Makes release available for promotion
+
+### Setup Required
+
+You'll need to configure 5 GitHub Secrets:
+1. **KEYSTORE_BASE64** - Your app signing keystore (base64 encoded)
+2. **KEYSTORE_PASSWORD** - Keystore password
+3. **KEY_ALIAS** - Key alias name
+4. **KEY_PASSWORD** - Key password
+5. **PLAY_STORE_SERVICE_ACCOUNT_JSON** - Google Play API credentials
+
+### After Upload
+
+Once uploaded to the Internal track, you can:
+- Promote to **Closed Testing** (alpha/beta)
+- Promote to **Open Testing** (public beta)
+- Promote to **Production** (all users)
+
+### Full Documentation
+
+📖 **Complete Setup Guide**: [GOOGLE_PLAY_PUBLISHING.md](GOOGLE_PLAY_PUBLISHING.md)
+
+The guide covers:
+- Creating a signing keystore
+- Setting up Google Play service account
+- Adding secrets to GitHub
+- Troubleshooting common issues
+- Best practices for security
 
 ## 🎉 Summary
 

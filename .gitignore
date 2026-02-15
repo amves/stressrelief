@@ -36,3 +36,9 @@ output.json
 .idea/modules.xml
 .idea/navEditor.xml
 META-INF/
+
+# Sensitive files for publishing
+*.keystore
+*.jks
+play-store-credentials.json
+keystore.properties
