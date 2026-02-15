@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
+    id("com.github.triplet.play")
 }
 
 android {
@@ -23,6 +24,20 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            // These will be provided via environment variables in CI/CD
+            // Only set if environment variables are available
+            val keystoreFile = System.getenv("KEYSTORE_FILE")
+            if (keystoreFile != null && file(keystoreFile).exists()) {
+                storeFile = file(keystoreFile)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,8 +45,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Use signing config if keystore is available
+            val keystoreFile = System.getenv("KEYSTORE_FILE")
+            if (keystoreFile != null && file(keystoreFile).exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
+    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -50,6 +71,27 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+play {
+    // Service account credentials for Google Play Console API
+    // This file is created dynamically in CI/CD from GitHub secrets
+    val credentialsFile = file("play-store-credentials.json")
+    if (credentialsFile.exists()) {
+        serviceAccountCredentials.set(credentialsFile)
+    }
+    
+    // Release track (internal, alpha, beta, production)
+    track.set("internal")
+    
+    // Release status (completed, draft, halted, inProgress)
+    releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
+    
+    // Automatically publish releases (if false, creates a draft)
+    defaultToAppBundles.set(false)
+    
+    // Retain old artifacts during upload
+    retain.artifacts.set(listOf())
 }
 
 dependencies {

@@ -178,8 +178,22 @@ This automatically:
 - Builds release APK
 - Generates changelog
 - Publishes to GitHub Releases
+- **Uploads to Google Play Store** (if configured)
 
 📖 **Full Release Guide**: See [RELEASE_PROCESS.md](RELEASE_PROCESS.md)
+
+### Publishing to Google Play Store
+
+Want to automate uploads to Google Play? The workflow supports it!
+
+📖 **Google Play Setup Guide**: See [GOOGLE_PLAY_PUBLISHING.md](GOOGLE_PLAY_PUBLISHING.md)
+
+Once configured with required secrets, releases automatically upload to Google Play Console (Internal Track).
+
+**Required Secrets**:
+- `KEYSTORE_BASE64` - App signing keystore
+- `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD` - Keystore credentials
+- `PLAY_STORE_SERVICE_ACCOUNT_JSON` - Google Play API credentials
 
 ## Notes
 
