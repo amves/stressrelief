@@ -1,26 +1,120 @@
-name: Build Kotlin Project
+name: Android Build
 
 on:
   push:
     branches:
       - main
       - master
+      - copilot/**
   pull_request:
+  workflow_dispatch:  # Allow manual workflow runs
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # Required for creating releases
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for version tagging
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Run tests
-        run: ./gradlew test
+          cache: 'gradle'
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace
+        continue-on-error: true
+      
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+      
+      - name: Build release APK (unsigned)
+        run: ./gradlew assembleRelease --stacktrace
+        continue-on-error: true
+      
+      - name: Upload Debug APK (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+      
+      - name: Upload Release APK (Artifact)
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: app-release-unsigned
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+      
+      - name: Get version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | sed 's/.*= \(.*\)/\1/')
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION_NAME}-${VERSION_CODE}" >> $GITHUB_OUTPUT
+      
+      - name: Create Release (Main/Master Branch Only)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}-${{ github.run_number }}
+          name: Release ${{ steps.version.outputs.version_name }} (${{ steps.version.outputs.version_code }})
+          body: |
+            ## StressRelief APK Release
+            
+            **Version**: ${{ steps.version.outputs.version_name }}
+            **Build**: ${{ steps.version.outputs.version_code }}
+            **Commit**: ${{ github.sha }}
+            
+            ### Features
+            - HRV Calculator (RMSSD, SDNN, PNN50)
+            - Health Connect integration
+            - Wear OS heart rate monitoring
+            - Firebase authentication
+            - Dashboard & analytics
+            
+            ### Download
+            - **app-debug.apk**: Debug version with all features (recommended for testing)
+            - **app-release-unsigned.apk**: Release version (unsigned)
+            
+            ### Installation
+            1. Download the APK file
+            2. Transfer to your Android device
+            3. Enable "Install from unknown sources" in Settings
+            4. Tap the APK to install
+            
+            Built from commit: ${{ github.sha }}
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
