@@ -129,7 +129,7 @@ fun HealthMonitorScreen(
                             modifier = Modifier.fillMaxWidth(),
                             enabled = hasPermissions
                         ) {
-                            Icon(Icons.Default.Analytics, contentDescription = null)
+                            Icon(Icons.Default.Info, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Calculate HRV (24h)")
                         }
@@ -256,7 +256,7 @@ private fun CurrentHeartRateCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
-                    if (isMonitoring) Icons.Default.Stop else Icons.Default.PlayArrow,
+                    if (isMonitoring) Icons.Default.Close else Icons.Default.PlayArrow,
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(8.dp))
