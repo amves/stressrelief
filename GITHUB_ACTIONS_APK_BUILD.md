@@ -4,6 +4,8 @@
 
 You can build APKs directly on GitHub without installing Android Studio! GitHub Actions will automatically build your app in the cloud every time you push code.
 
+**NEW**: APKs are automatically published as GitHub Releases when merged to main/master branch! 🎉
+
 ## ✅ What's Set Up
 
 A GitHub Actions workflow (`.github/workflows/build.yml`) that:
@@ -12,12 +14,40 @@ A GitHub Actions workflow (`.github/workflows/build.yml`) that:
 - ✅ Can be triggered manually anytime
 - ✅ Builds both debug and release APKs
 - ✅ Uploads APKs as downloadable artifacts
+- ✅ **Publishes APKs as GitHub Releases (main/master only)**
 - ✅ Runs unit tests
 - ✅ Caches dependencies for faster builds
 
 ## 🚀 How to Get Your APK
 
-### Method 1: Automatic Build (Recommended)
+### Method 1: Download from Releases (Recommended for Main Branch) ⭐
+
+**When code is merged to main/master**, APKs are automatically published as GitHub Releases:
+
+1. **Go to Releases**
+   - Navigate to: https://github.com/amves/stressrelief/releases
+   - Or click "Releases" on the right side of repository page
+
+2. **Download Latest Release**
+   - Click on the latest release
+   - Scroll to "Assets" section
+   - Download `app-debug.apk` (recommended for testing)
+   - Or download `app-release-unsigned.apk` for release version
+
+3. **Install on Phone**
+   - Transfer APK to your phone
+   - Tap to install
+   - Enable "Install from unknown sources" if prompted
+
+**Benefits**:
+- ✅ Always available (not expired like artifacts)
+- ✅ Easy to share (public download link)
+- ✅ Version tagged and documented
+- ✅ Changelog included
+
+### Method 2: Download from Artifacts (For Development Branches)
+
+For non-main branches or pull requests:
 
 1. **Push your code to GitHub**
    ```bash
@@ -35,7 +65,7 @@ A GitHub Actions workflow (`.github/workflows/build.yml`) that:
    - Download `app-debug` (this is the APK you can install)
    - The downloaded ZIP contains `app-debug.apk`
 
-### Method 2: Manual Build
+### Method 3: Manual Build
 
 1. **Go to GitHub Actions tab**
 2. **Click on "Android Build" workflow** (left sidebar)
