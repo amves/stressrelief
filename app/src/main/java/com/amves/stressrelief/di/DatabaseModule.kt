@@ -3,6 +3,7 @@ package com.amves.stressrelief.di
 import android.content.Context
 import androidx.room.Room
 import com.amves.stressrelief.data.local.AppDatabase
+import com.amves.stressrelief.data.local.MoodSessionDao
 import com.amves.stressrelief.data.local.SessionDao
 import dagger.Module
 import dagger.Provides
@@ -25,11 +26,18 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "stress_relief_db"
-        ).build()
+        )
+            .addMigrations(AppDatabase.MIGRATION_1_2)
+            .build()
     }
     
     @Provides
     fun provideSessionDao(database: AppDatabase): SessionDao {
         return database.sessionDao()
+    }
+
+    @Provides
+    fun provideMoodSessionDao(database: AppDatabase): MoodSessionDao {
+        return database.moodSessionDao()
     }
 }
